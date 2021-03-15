@@ -98,7 +98,7 @@ async function join() {
 }
 //退出房间方法
 async function leave() {
-  for (trackName in localTracks) {
+  for (let trackName in localTracks) {
     var track = localTracks[trackName];
     if(track) {
       track.stop();//停止播放
