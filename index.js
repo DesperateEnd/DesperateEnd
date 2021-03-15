@@ -1,4 +1,5 @@
-// create Agora client
+import {getErrType} from './errorCode.js'
+// create Agora client 创建实例
 var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
 var localTracks = {
@@ -6,15 +7,15 @@ var localTracks = {
   audioTrack: null
 };
 var remoteUsers = {};
-// Agora client options
+// Agora client options 登录参数
 var options = {
-  appid: null,
-  channel: null,
-  uid: null,
-  token: null
+  appid: null,//appID 
+  channel: null,//房间名
+  uid: null,//用户id
+  token: null//token
 };
 
-// the demo can auto join channel with params in url
+// the demo can auto join channel with params in url 如果地址带有参数 直接登录
 $(() => {
   var urlParams = new URL(location.href).searchParams;
   options.appid = urlParams.get("appid");
@@ -27,7 +28,7 @@ $(() => {
     $("#join-form").submit();
   }
 })
-
+//加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
   e.preventDefault();
   $("#join").attr("disabled", true);
@@ -35,6 +36,18 @@ $("#join-form").submit(async function (e) {
     options.appid = $("#appid").val();
     options.token = $("#token").val();
     options.channel = $("#channel").val();
+    if(!options.appid){
+      alert('请输入appID')
+      return
+    }
+    if(!options.token){
+      alert('请输入token')
+      return
+    }
+    if(!options.channel){
+      alert('请输入房间名')
+      return
+    }
     await join();
     if(options.token) {
       $("#success-alert-with-token").css("display", "block");
@@ -43,55 +56,63 @@ $("#join-form").submit(async function (e) {
       $("#success-alert").css("display", "block");
     }
   } catch (error) {
+    getErrType(error.code,1)
     console.error(error);
   } finally {
     $("#leave").attr("disabled", false);
   }
 })
-
+//退出按钮点击事件
 $("#leave").click(function (e) {
   leave();
 })
-
+//加入通话事件
 async function join() {
   
   // add event listener to play remote tracks when remote user publishs.
+  //监听人员加入事件
   client.on("user-published", handleUserPublished);
+  //监听人员退出事件
   client.on("user-unpublished", handleUserUnpublished);
 
   // join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
     // join the channel
+    //加入房间 返回uid
     client.join(options.appid, options.channel, options.token || null),
     // create local tracks, using microphone and camera
+    //创建音频轨道对象 返回音频实例
     AgoraRTC.createMicrophoneAudioTrack(),
+    //创建视频轨道对象 返回视频实例
     AgoraRTC.createCameraVideoTrack()
   ]);
   
-  // play local video track
+  // play local video track 播放视频
   localTracks.videoTrack.play("local-player");
+  //显示 视频id
   $("#local-player-name").text(`localVideo(${options.uid})`);
 
-  // publish local tracks to channel
+  // publish local tracks to channel 发布本地音视频轨道
   await client.publish(Object.values(localTracks));
   console.log("publish success");
 }
-
+//退出房间方法
 async function leave() {
   for (trackName in localTracks) {
     var track = localTracks[trackName];
     if(track) {
-      track.stop();
-      track.close();
-      localTracks[trackName] = undefined;
+      track.stop();//停止播放
+      track.close();//关闭
+      localTracks[trackName] = undefined;//清除实例
     }
   }
 
   // remove remote users and player views
   remoteUsers = {};
+  //移除video 标签
   $("#remote-playerlist").html("");
 
-  // leave the channel
+  // leave the channel 实例退出
   await client.leave();
 
   $("#local-player-name").text("");
@@ -99,13 +120,13 @@ async function leave() {
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
 }
-
+// 创建dom
 async function subscribe(user, mediaType) {
   const uid = user.uid;
   // subscribe to a remote user
   await client.subscribe(user, mediaType);
   console.log("subscribe success");
-  if (mediaType === 'video') {
+  if (mediaType === 'video') {//视频
     const player = $(`
       <div id="player-wrapper-${uid}">
         <p class="player-name">remoteUser(${uid})</p>
@@ -115,19 +136,34 @@ async function subscribe(user, mediaType) {
     $("#remote-playerlist").append(player);
     user.videoTrack.play(`player-${uid}`);
   }
-  if (mediaType === 'audio') {
+  if (mediaType === 'audio') {//音频
     user.audioTrack.play();
   }
 }
-
+//人员加入房间回调
 function handleUserPublished(user, mediaType) {
   const id = user.uid;
   remoteUsers[id] = user;
   subscribe(user, mediaType);
 }
-
+//人员退出回调
 function handleUserUnpublished(user) {
   const id = user.uid;
   delete remoteUsers[id];
   $(`#player-wrapper-${id}`).remove();
 }
+//点击切换摄像头
+$("#switch").click(function(){
+  //获取设备id
+  AgoraRTC.getDevices (function(devices) {
+    var devCount = devices.length;
+    
+    var id = devices[0].deviceId;
+    alert(localTracks.videoTrack.getVideoTrack)
+    localTracks.videoTrack.getVideoTrack().stop();
+    localTracks.videoTrack.switchDevice("video",id);
+    }, function(errStr){
+         console.error("获取可用设备失败", errStr);
+    });
+  
+})
