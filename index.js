@@ -106,7 +106,7 @@ async function leave() {
       localTracks[trackName] = undefined;//清除实例
     }
   }
-
+ console.log('test')
   // remove remote users and player views
   remoteUsers = {};
   //移除video 标签
