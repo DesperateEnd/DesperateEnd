@@ -6,6 +6,7 @@ var localTracks = {
   videoTrack: null,
   audioTrack: null
 };
+//加入房间的用户
 var remoteUsers = {};
 // Agora client options 登录参数
 var options = {
@@ -69,9 +70,14 @@ $("#join-form").submit(async function (e) {
 $("#leave").click(function (e) {
   leave();
 })
+//挂断按钮点击事件
+$('.leave-btn').click(function(){
+  leave();
+  $(".call-box").hide();
+})
 //加入通话事件
 async function join() {
-  
+  $(".call-box").show()
   // add event listener to play remote tracks when remote user publishs.
   //监听人员加入事件
   client.on("user-published", handleUserPublished);
@@ -91,7 +97,9 @@ async function join() {
   ]);
   
   // play local video track 播放视频
-  localTracks.videoTrack.play("local-player");
+  localTracks.videoTrack.play("local-player",{
+    Properties:'contain'
+  });
   //显示 视频id
   $("#local-player-name").text(`localVideo(${options.uid})`);
 
@@ -132,16 +140,23 @@ async function subscribe(user, mediaType) {
   const uid = user.uid;
   // subscribe to a remote user
   await client.subscribe(user, mediaType);
-  console.log("subscribe success");
+  console.log("subscribe success",mediaType);
   if (mediaType === 'video') {//视频
-    const player = $(`
-      <div id="player-wrapper-${uid}">
-        <p class="player-name">remoteUser(${uid})</p>
-        <div id="player-${uid}" class="player"></div>
-      </div>
-    `);
-    $("#remote-playerlist").append(player);
-    user.videoTrack.play(`player-${uid}`);
+    // const player = $(`
+    //   <div id="player-wrapper-${uid}">
+    //     <p class="player-name">remoteUser(${uid})</p>
+    //     <div id="player-${uid}" class="player"></div>
+    //   </div>
+    // `);
+    const player = $(`<div id="player-${uid}" class="player"></div>`)
+    $(".other-box").text('')
+    $(".other-box").attr('data-uid',uid)
+    $(".other-box").append(player);
+    const ptherUser = $(`<p class="other-${uid}" data-uid="${uid}">otherVideo(${uid})</p>`)
+    $("#remote-playerlist").append(ptherUser)
+    user.videoTrack.play(`player-${uid}`,{
+      Properties:'contain'
+    });
   }
   if (mediaType === 'audio') {//音频
     user.audioTrack.play();
@@ -157,6 +172,7 @@ function handleUserPublished(user, mediaType) {
 function handleUserUnpublished(user) {
   const id = user.uid;
   delete remoteUsers[id];
+  $(`.other-${id}`).remove();
   $(`#player-wrapper-${id}`).remove();
 }
 async function switchVideo(id){
@@ -197,3 +213,46 @@ document.addEventListener("plusready", function(){
     }
   })
 }, false);
+//最小化
+$(".show-min").click(function(){
+  $(".show-min").hide();
+  $(".show-max").show();
+  $(".call-box").addClass('call-box-min');
+  $('.btn-box').hide();
+  $(".my-video").hide();
+})
+//最大化
+$(".show-max").click(function(){
+  $(".show-min").show();
+  $(".show-max").hide();
+  $(".call-box").removeClass('call-box-min');
+  $('.btn-box').show();
+  $(".my-video").show();
+})
+//静音
+$(".audio-none").click(function(){
+  let uid = $(".other-box").attr('data-uid')
+  remoteUsers[uid].audioTrack.setVolume(0);
+  $(".audio-none").hide();
+  $(".audio-auto").show();
+})
+//取消静音
+$(".audio-auto").click(function(){
+  let uid = $(".other-box").attr('data-uid')
+  remoteUsers[uid].audioTrack.setVolume(100);
+  $(".audio-none").show();
+  $(".audio-auto").hide();
+})
+//切换视频对象
+$("#remote-playerlist").on('click',function(e){
+  let uid = $(e.target).attr('data-uid')
+  if(uid){
+    const player2 = $(`<div id="player-${uid}" class="player"></div>`)
+    $(".other-box").text('')
+    $(".other-box").attr('data-uid',uid)
+    $(".other-box").append(player2);
+    remoteUsers[uid].videoTrack.play(`player-${uid}`,{
+      Properties:'contain'
+    });
+  }
+})
