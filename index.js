@@ -170,8 +170,8 @@ $("#switch").click(function(){
   console.log(AgoraRTC)
   //获取设备id
   AgoraRTC.getDevices().then(devices=>{
-    alert(JSON.stringify(devices))
     
+    console.log(devices,localTracks.videoTrack)
     switchVideo(devices[2].deviceId)
     
     
@@ -180,3 +180,10 @@ $("#switch").click(function(){
   });
   
 })
+				
+document.addEventListener("plusready", function(){
+	//扩展API加载完成事
+  alert('plusapi加载完毕')
+  alert("IMEI: "+plus.device.imei);
+}, false);
+alert(plus)
