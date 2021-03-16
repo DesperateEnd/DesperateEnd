@@ -184,6 +184,13 @@ $("#switch").click(function(){
 document.addEventListener("plusready", function(){
 	//扩展API加载完成事
   alert('plusapi加载完毕')
-  alert("IMEI: "+plus.device.imei);
+  plus.device.getInfo({
+    success:(res)=>{
+      alert('获取成功'+JSON.stringify(res))
+    },
+    fail:(err)=>{
+      alert('获取失败')
+    }
+  })
 }, false);
 alert(plus)
