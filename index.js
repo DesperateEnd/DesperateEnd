@@ -28,6 +28,9 @@ $(() => {
     $("#join-form").submit();
   }
 })
+$("#appid").val('62241f80635f4ff2993adf7974fb2937');
+$("#token").val('00662241f80635f4ff2993adf7974fb2937IACi59bDbcE0NGPhvAMPtCePx94mNQa9XhU0WML3IZdlXAx+f9gAAAAAEAAdwi3RQGVRYAEAAQA/ZVFg');
+$("#channel").val('test');
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
   e.preventDefault();
@@ -152,18 +155,28 @@ function handleUserUnpublished(user) {
   delete remoteUsers[id];
   $(`#player-wrapper-${id}`).remove();
 }
+async function switchVideo(id){
+   // 切换摄像头。
+localTracks.videoTrack.setDevice(id).then(() => {
+  console.log("set device success");
+  alert('切换成功')
+}).catch(e => {
+  alert(`切换失败：${e.code}`)
+  console.log("set device error", e);
+});
+}
 //点击切换摄像头
 $("#switch").click(function(){
+  console.log(AgoraRTC)
   //获取设备id
-  AgoraRTC.getDevices (function(devices) {
-    var devCount = devices.length;
+  AgoraRTC.getDevices().then(devices=>{
+    alert(JSON.stringify(devices))
     
-    var id = devices[0].deviceId;
-    alert(localTracks.videoTrack.getVideoTrack)
-    localTracks.videoTrack.getVideoTrack().stop();
-    localTracks.videoTrack.switchDevice("video",id);
-    }, function(errStr){
-         console.error("获取可用设备失败", errStr);
-    });
+    switchVideo(devices[0].deviceId)
+    
+    
+  }).catch(e => {
+    console.log("get devices error!", e);
+  });
   
 })
