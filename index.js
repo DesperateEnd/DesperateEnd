@@ -122,6 +122,10 @@ async function leave() {
   $("#join").attr("disabled", false);
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
+  if(plus){
+    var videoView = plus.webview.getWebviewById('videoView');
+    videoView.close()
+  }
 }
 // 创建dom
 async function subscribe(user, mediaType) {
@@ -193,4 +197,3 @@ document.addEventListener("plusready", function(){
     }
   })
 }, false);
-alert(plus)
