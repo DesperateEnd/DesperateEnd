@@ -59,22 +59,44 @@
       <div class="button-group">
         <button id="join" type="submit" class="btn btn-primary btn-sm">加入</button>
         <button id="leave" type="button" class="btn btn-primary btn-sm" disabled>退出</button>
-        <button id="switch"  type="button" class="btn btn-primary btn-sm">切换摄像头</button>
+        <!-- <button id="switch"  type="button" class="btn btn-primary btn-sm">切换摄像头</button> -->
       </div>
     </form>
 
     <div class="row video-group">
       <div class="col">
+        我的id:
         <p id="local-player-name" class="player-name"></p>
-        <div id="local-player" class="player"></div>
+        <!-- <div id="local-player" class="player"></div> -->
       </div>
       <div class="w-100"></div>
       <div class="col">
+        房间里的其他用户：
         <div id="remote-playerlist"></div>
       </div>
     </div>
+    
   </div>
+  <!-- 通话界面 -->
+  <div class="call-box">
+    <!-- 他人界面 -->
+    <div class="other-box">
 
+    </div>
+    <!-- 我的界面 -->
+    <div class="my-video">
+      <div id="local-player" class="player"></div>
+    </div>
+    <!-- 操作按钮 -->
+    <div class="btn-box">
+      <span id="#switch">切换摄像头</span>
+      <span class="leave-btn">挂断</span>
+      <span class="audio-none">静音</span>
+      <span class="audio-auto">取消静音</span>
+    </div>
+    <div class="show-min">最小化</div>
+    <div class="show-max"></div>
+</div>
   <script src="./vendor/jquery-3.4.1.min.js"></script>
   <script src="./vendor/bootstrap.bundle.min.js"></script>
   <script src="./AgoraRTC_N-4.3.0.js"></script>

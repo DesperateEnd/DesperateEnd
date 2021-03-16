@@ -30,8 +30,8 @@ input {
 }
 
 .player {
-  width: 480px;
-  height: 320px;
+  width: 100%;
+    height: 100%;
 }
 
 .player-name {
@@ -44,7 +44,67 @@ input {
 
 @media (max-width: 640px) {
   .player {
-    width: 320px;
-    height: 240px;
+    width: 100%;
+    height: 100%;
   }
+}
+
+/* 新添加的样式 */
+.call-box{
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  right: 0;
+  top: 0;
+  background: #000;
+  color: red;
+  display: none;
+  max-width: 375px;
+  max-height: 667px;
+}
+.my-video{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  height: 16%;
+  width: 16%;
+  background: #ddd;
+  z-index: 5;
+}
+.btn-box{
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+  z-index: 5;
+}
+.btn-box>span{
+  display: inline-block;
+  vertical-align: middle;
+  width: 32%;
+}
+.other-box{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.show-min{
+  position: absolute;
+  z-index: 5;
+}
+.show-max{
+  position: absolute;
+  z-index: 5;
+  display: none;
+  height: 100%;
+  width: 100%;
+}
+.call-box-min{
+  top: 20px;
+  right: 20px;
+  width: 20%;
+  height: 20%;
+}
+.btn-box .audio-auto{
+  display: none;
 }
