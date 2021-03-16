@@ -172,7 +172,7 @@ $("#switch").click(function(){
   AgoraRTC.getDevices().then(devices=>{
     alert(JSON.stringify(devices))
     
-    switchVideo(devices[0].deviceId)
+    switchVideo(devices[2].deviceId)
     
     
   }).catch(e => {
