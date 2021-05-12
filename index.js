@@ -30,7 +30,7 @@ $(() => {
   }
 })
 $("#appid").val('62241f80635f4ff2993adf7974fb2937');
-$("#token").val('00662241f80635f4ff2993adf7974fb2937IADQWNLGTSbC4YRQdGgi4xfI/vEIjipjfgsXLdVjX/fzrQx+f9gAAAAAEAAeBkCSQCdwYAEAAQBBJ3Bg');
+$("#token").val('00662241f80635f4ff2993adf7974fb2937IABMcoNKCLSK48aXXG33L1ptFt+3R3iNOO48w66B7tjNQQx+f9gAAAAAEAB33sfLztKcYAEAAQDN0pxg');
 $("#channel").val('test');
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
