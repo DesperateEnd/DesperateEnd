@@ -30,7 +30,7 @@ $(() => {
   }
 })
 $("#appid").val('62241f80635f4ff2993adf7974fb2937');
-$("#token").val('00662241f80635f4ff2993adf7974fb2937IABMcoNKCLSK48aXXG33L1ptFt+3R3iNOO48w66B7tjNQQx+f9gAAAAAEAB33sfLztKcYAEAAQDN0pxg');
+$("#token").val('00662241f80635f4ff2993adf7974fb2937IABIlDzYQ9vKPvV4WawSwlIfhII9BPENe8MNtcptvELKiQx+f9gAAAAAEACRer0xrEieYAEAAQCsSJ5g');
 $("#channel").val('test');
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
@@ -204,7 +204,6 @@ $("#switch").click(function(){
 document.addEventListener("plusready", function(){
 	//扩展API加载完成事
   alert('plusapi加载完毕')
-
   plus.device.getInfo({
     success:(res)=>{
       alert('获取成功'+JSON.stringify(res))
