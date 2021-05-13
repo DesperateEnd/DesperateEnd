@@ -204,9 +204,7 @@ $("#switch").click(function(){
 document.addEventListener("plusready", function(){
 	//扩展API加载完成事
   alert('plusapi加载完毕')
-  
-plus.audio.createPlayer(styles);
-plus.audio.createPlayer(path);
+
   plus.device.getInfo({
     success:(res)=>{
       alert('获取成功'+JSON.stringify(res))
