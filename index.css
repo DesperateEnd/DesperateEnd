@@ -108,3 +108,7 @@ input {
 .btn-box .audio-auto{
   display: none;
 }
+html,body{
+	background: #000;
+	color:#fff
+}
