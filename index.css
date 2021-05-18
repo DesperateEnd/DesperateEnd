@@ -58,7 +58,7 @@ input {
   top: 0;
   background: #000;
   color: red;
- 
+  display: none;
   max-width: 375px;
   max-height: 667px;
 }
