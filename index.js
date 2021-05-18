@@ -109,6 +109,11 @@ async function join() {
 }
 //退出房间方法
 async function leave() {
+  if(plus){
+    var videoView = plus.webview.getWebviewById('videoView');
+    videoView.hide()
+    return
+  }
   for (let trackName in localTracks) {
     var track = localTracks[trackName];
     if(track) {
@@ -132,7 +137,7 @@ async function leave() {
   console.log("client leaves channel success");
   if(plus){
     var videoView = plus.webview.getWebviewById('videoView');
-    videoView.close()
+    videoView.hide()
   }
 }
 // 创建dom
