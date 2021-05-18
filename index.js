@@ -27,11 +27,13 @@ $(() => {
     $("#token").val(options.token);
     $("#channel").val(options.channel);
     $("#join-form").submit();
+  }else{
+    $("#appid").val('62241f80635f4ff2993adf7974fb2937');
+    $("#token").val('00662241f80635f4ff2993adf7974fb2937IAA1wjrEBfZ7ZUCTfaHlDgxDHlRYXnFVEGWsIZknxvuy7Ax+f9gAAAAAEACRer0xWzyjYAEAAQBbPKNg');
+    $("#channel").val('test');
   }
 })
-$("#appid").val('62241f80635f4ff2993adf7974fb2937');
-$("#token").val('00662241f80635f4ff2993adf7974fb2937IAA1wjrEBfZ7ZUCTfaHlDgxDHlRYXnFVEGWsIZknxvuy7Ax+f9gAAAAAEACRer0xWzyjYAEAAQBbPKNg');
-$("#channel").val('test');
+
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
   e.preventDefault();
