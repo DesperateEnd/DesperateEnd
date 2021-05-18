@@ -22,7 +22,10 @@ $(() => {
   options.appid = urlParams.get("appid");
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
-  // options.uid = urlParams.get("uid");
+  options.uid = urlParams.get("uid");
+  if(options.uid){
+    options.uid = options.uid*1
+  }
   // console.log("用户id",options.uid)
   if (options.appid && options.channel) {
     $("#appid").val(options.appid);
@@ -35,7 +38,10 @@ $(() => {
     $("#channel").val('90_146_1621330721');
   }
 })
-
+$("#appid").val('c8ca5c7c447041d3b11d9ebed00efade');
+    $("#token").val('006c8ca5c7c447041d3b11d9ebed00efadeIADA9wwoutYYKnYblJNj8W1fZaZqsjXm4HQF3IjhGWxoQcRmwUHpr4RpIgDMIXkEodykYAQAAQAxmaNgAgAxmaNgAwAxmaNgBAAxmaNg');
+    $("#channel").val('90_146_1621330721');
+    
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
   e.preventDefault();
@@ -44,6 +50,7 @@ $("#join-form").submit(async function (e) {
     options.appid = $("#appid").val();
     options.token = $("#token").val();
     options.channel = $("#channel").val();
+    options.uid = 90;
     if(!options.appid){
       alert('请输入appID')
       return
