@@ -22,8 +22,8 @@ $(() => {
   options.appid = urlParams.get("appid");
   options.channel = urlParams.get("channel");
   options.token = urlParams.get("token");
-  options.uid = urlParams.get("uid");
-  console.log("用户id",options.uid)
+  // options.uid = urlParams.get("uid");
+  // console.log("用户id",options.uid)
   if (options.appid && options.channel) {
     $("#appid").val(options.appid);
     $("#token").val(options.token);
