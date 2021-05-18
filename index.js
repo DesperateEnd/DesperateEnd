@@ -222,12 +222,16 @@ $(".show-min").click(function(){
   $(".call-box").addClass('call-box-min');
   $('.btn-box').hide();
   $(".my-video").hide();
-  this.webview.setStyle({
-    height:"100px",
-    width:"100px",
-    top:"100px",
-    right:"20px"
-});
+  if(plus){
+    var videoView = plus.webview.getWebviewById('videoView');
+    videoView.setStyle({
+      height:"100px",
+      width:"100px",
+      top:"100px",
+      right:"20px"
+  });
+  }
+ 
 })
 //最大化
 $(".show-max").click(function(){
