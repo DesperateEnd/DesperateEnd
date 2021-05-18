@@ -109,11 +109,7 @@ async function join() {
 }
 //退出房间方法
 async function leave() {
-  if(plus){
-    var videoView = plus.webview.getWebviewById('videoView');
-    videoView.hide()
-    return
-  }
+  
   for (let trackName in localTracks) {
     var track = localTracks[trackName];
     if(track) {
@@ -208,15 +204,16 @@ $("#switch").click(function(){
 				
 document.addEventListener("plusready", function(){
 	//扩展API加载完成事
-  alert('plusapi加载完毕')
+  console.log('plusapi加载完毕')
   plus.device.getInfo({
     success:(res)=>{
-      alert('获取成功'+JSON.stringify(res))
+      console.log('获取成功'+JSON.stringify(res))
     },
     fail:(err)=>{
       alert('获取失败')
     }
   })
+
 }, false);
 //最小化
 $(".show-min").click(function(){
@@ -225,6 +222,12 @@ $(".show-min").click(function(){
   $(".call-box").addClass('call-box-min');
   $('.btn-box').hide();
   $(".my-video").hide();
+  this.webview.setStyle({
+    height:"100px",
+    width:"100px",
+    top:"100px",
+    right:"20px"
+});
 })
 //最大化
 $(".show-max").click(function(){
