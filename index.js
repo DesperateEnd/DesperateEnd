@@ -12,7 +12,7 @@ var remoteUsers = {};
 var options = {
   appid: null,//appID 
   channel: null,//房间名
-  uid: null,//用户id
+  uid: 90,//用户id
   token: null//token
 };
 
@@ -30,9 +30,9 @@ $(() => {
     $("#channel").val(options.channel);
     $("#join-form").submit();
   }else{
-    $("#appid").val('62241f80635f4ff2993adf7974fb2937');
-    $("#token").val('00662241f80635f4ff2993adf7974fb2937IAA1wjrEBfZ7ZUCTfaHlDgxDHlRYXnFVEGWsIZknxvuy7Ax+f9gAAAAAEACRer0xWzyjYAEAAQBbPKNg');
-    $("#channel").val('test');
+    $("#appid").val('c8ca5c7c447041d3b11d9ebed00efade');
+    $("#token").val('006c8ca5c7c447041d3b11d9ebed00efadeIADA9wwoutYYKnYblJNj8W1fZaZqsjXm4HQF3IjhGWxoQcRmwUHpr4RpIgDMIXkEodykYAQAAQAxmaNgAgAxmaNgAwAxmaNgBAAxmaNg');
+    $("#channel").val('90_146_1621330721');
   }
 })
 
