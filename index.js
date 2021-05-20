@@ -95,33 +95,23 @@ async function join() {
   //监听人员退出事件
   client.on("user-unpublished", handleUserUnpublished);
 
-  // join a channel and create local tracks, we can use Promise.all to run them concurrently
-  // [ options.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
-  //   // join the channel
-  //   //加入房间 返回uid
-  //   client.join(options.appid, options.channel, options.token || null),
-  //   // create local tracks, using microphone and camera
-  //   //创建音频轨道对象 返回音频实例
-  //   AgoraRTC.createMicrophoneAudioTrack(),
-  //   //创建视频轨道对象 返回视频实例
-  //   AgoraRTC.createCameraVideoTrack()
-  // ]);
-   // join a channel and create local tracks, we can use Promise.all to run them concurrently
-   [ options.uid, localTracks.audioTrack ] = await Promise.all([
+  //join a channel and create local tracks, we can use Promise.all to run them concurrently
+  [ options.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
     // join the channel
     //加入房间 返回uid
-    client.join(options.appid, options.channel, options.token || null),
+    client.join(options.appid, options.channel, options.token ,options.uid),
     // create local tracks, using microphone and camera
     //创建音频轨道对象 返回音频实例
     AgoraRTC.createMicrophoneAudioTrack(),
-    
+    //创建视频轨道对象 返回视频实例
+    AgoraRTC.createCameraVideoTrack()
   ]);
-  // // play local video track 播放视频
-  // localTracks.videoTrack.play("local-player",{
-  //   Properties:'contain'
-  // });
-  // //显示 视频id
-  // $("#local-player-name").text(`localVideo(${options.uid})`);
+  // play local video track 播放视频
+  localTracks.videoTrack.play("local-player",{
+    Properties:'contain'
+  });
+  //显示 视频id
+  $("#local-player-name").text(`localVideo(${options.uid})`);
 
   // publish local tracks to channel 发布本地音视频轨道
   await client.publish(Object.values(localTracks));
