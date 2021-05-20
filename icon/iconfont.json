@@ -1,0 +1,79 @@
+{
+  "id": "2560905",
+  "name": "test",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "680377",
+      "name": "最小化",
+      "font_class": "zuixiaohua",
+      "unicode": "e6e8",
+      "unicode_decimal": 59112
+    },
+    {
+      "icon_id": "1231602",
+      "name": "挂断电话",
+      "font_class": "guaduandianhua",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "2570115",
+      "name": "麦克风",
+      "font_class": "maikefeng-tianchong",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "6010944",
+      "name": "1-最大化",
+      "font_class": "-zuidahua",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "9114392",
+      "name": "43静音",
+      "font_class": "jingyin",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "9241143",
+      "name": "跳转",
+      "font_class": "iconzhengli_tiaozhuan",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "10109104",
+      "name": "喇叭",
+      "font_class": "laba",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "10379207",
+      "name": "切换镜头",
+      "font_class": "iconqiehuanjingtou",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "15668871",
+      "name": "通话中心",
+      "font_class": "tonghuazhongxin",
+      "unicode": "e77f",
+      "unicode_decimal": 59263
+    },
+    {
+      "icon_id": "17814556",
+      "name": "禁言",
+      "font_class": "jinyan",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    }
+  ]
+}

@@ -1,18 +1,19 @@
 import {getErrType} from './errorCode.js'
 // create Agora client 创建实例
 var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-
+var callType = 1;// 1语音 2视频
 var localTracks = {
   videoTrack: null,
   audioTrack: null
 };
+
 //加入房间的用户
 var remoteUsers = {};
 // Agora client options 登录参数
 var options = {
   appid: null,//appID 
   channel: null,//房间名
-  uid: 90,//用户id
+  uid: null,//用户id
   token: null//token
 };
 
@@ -21,36 +22,39 @@ $(() => {
   var urlParams = new URL(location.href).searchParams;
   options.appid = urlParams.get("appid");
   options.channel = urlParams.get("channel");
-  options.token = urlParams.get("token");
-  options.uid = urlParams.get("uid");
-  if(options.uid){
-    options.uid = options.uid*1
-  }
+  options.token = decodeURIComponent(urlParams.get("token"));
+  options.uid = urlParams.get("uid")*1;
+  callType = urlParams.get("type")*1;
+  console.log(options)
   // console.log("用户id",options.uid)
-  if (options.appid && options.channel) {
+  //如果参数齐全直接加入房间
+  if (options.appid && options.channel && options.uid && options.token) {
     $("#appid").val(options.appid);
     $("#token").val(options.token);
     $("#channel").val(options.channel);
+    $("#userid").val(options.uid)
     $("#join-form").submit();
-  }else{
-    $("#appid").val('c8ca5c7c447041d3b11d9ebed00efade');
-    $("#token").val('006c8ca5c7c447041d3b11d9ebed00efadeIADA9wwoutYYKnYblJNj8W1fZaZqsjXm4HQF3IjhGWxoQcRmwUHpr4RpIgDMIXkEodykYAQAAQAxmaNgAgAxmaNgAwAxmaNgBAAxmaNg');
-    $("#channel").val('90_146_1621330721');
   }
 })
-$("#appid").val('c8ca5c7c447041d3b11d9ebed00efade');
-    $("#token").val('006c8ca5c7c447041d3b11d9ebed00efadeIADA9wwoutYYKnYblJNj8W1fZaZqsjXm4HQF3IjhGWxoQcRmwUHpr4RpIgDMIXkEodykYAQAAQAxmaNgAgAxmaNgAwAxmaNgBAAxmaNg');
-    $("#channel").val('90_146_1621330721');
+if(callType === 1 ){
+  var localTracks = {
+    audioTrack: null
+  };
+}
     
 //加入房间按钮 点击事件
 $("#join-form").submit(async function (e) {
   e.preventDefault();
+  options.appid = $("#appid").val();
+  options.channel = $("#channel").val();
+  options.token = $("#token").val();
+  options.uid = $("#userid").val()*1;
   $("#join").attr("disabled", true);
   try {
-    options.appid = $("#appid").val();
-    options.token = $("#token").val();
-    options.channel = $("#channel").val();
-    options.uid = 90;
+    // options.appid = $("#appid").val();
+    // options.token = $("#token").val();
+    // options.channel = $("#channel").val();
+    // options.uid = 90;
     if(!options.appid){
       alert('请输入appID')
       return
@@ -64,12 +68,7 @@ $("#join-form").submit(async function (e) {
       return
     }
     await join();
-    if(options.token) {
-      $("#success-alert-with-token").css("display", "block");
-    } else {
-      $("#success-alert a").attr("href", `index.html?appid=${options.appid}&channel=${options.channel}&token=${options.token}`);
-      $("#success-alert").css("display", "block");
-    }
+    
   } catch (error) {
     getErrType(error.code,1)
     console.error(error);
@@ -85,6 +84,7 @@ $("#leave").click(function (e) {
 $('.leave-btn').click(function(){
   leave();
   $(".call-box").hide();
+
 })
 //加入通话事件
 async function join() {
@@ -94,8 +94,20 @@ async function join() {
   client.on("user-published", handleUserPublished);
   //监听人员退出事件
   client.on("user-unpublished", handleUserUnpublished);
-
-  //join a channel and create local tracks, we can use Promise.all to run them concurrently
+  if(callType === 1 ){
+    //join a channel and create local tracks, we can use Promise.all to run them concurrently
+  [ options.uid, localTracks.audioTrack ] = await Promise.all([
+    // join the channel
+    //加入房间 返回uid
+    client.join(options.appid, options.channel, options.token ,options.uid),
+    // create local tracks, using microphone and camera
+    //创建音频轨道对象 返回音频实例
+    AgoraRTC.createMicrophoneAudioTrack(),
+    
+  ]);
+  
+  }else{
+    //join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
     // join the channel
     //加入房间 返回uid
@@ -112,6 +124,8 @@ async function join() {
   });
   //显示 视频id
   $("#local-player-name").text(`localVideo(${options.uid})`);
+  }
+  
 
   // publish local tracks to channel 发布本地音视频轨道
   await client.publish(Object.values(localTracks));
@@ -128,7 +142,6 @@ async function leave() {
       localTracks[trackName] = undefined;//清除实例
     }
   }
- console.log('test')
   // remove remote users and player views
   remoteUsers = {};
   //移除video 标签
@@ -143,7 +156,7 @@ async function leave() {
   console.log("client leaves channel success");
   if(plus){
     var videoView = plus.webview.getWebviewById('videoView');
-    videoView.hide()
+    videoView.close()
   }
 }
 // 创建dom
@@ -175,6 +188,7 @@ async function subscribe(user, mediaType) {
 }
 //人员加入房间回调
 function handleUserPublished(user, mediaType) {
+  console.log(user, mediaType)
   const id = user.uid;
   remoteUsers[id] = user;
   subscribe(user, mediaType);
