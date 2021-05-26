@@ -1,114 +1,44 @@
-.banner {
-  padding: 0;
-  background-color: #52575c;
-  color: white;
-}
-
-.banner-text {
-  padding: 8px 20px;
-  margin: 0;
-}
 
 
-#join-form {
-  margin-top: 10px;
-}
-
-.tips {
-  font-size: 12px;
-  margin-bottom: 2px;
-  color: gray;
-}
-
-.join-info-text {
-  margin-bottom: 2px;
-}
-
-input {
-  width: 100%;
-  margin-bottom: 2px;
-}
-
-.player {
-  width: 100%;
-    height: 100%;
-}
-
-.player-name {
-  margin: 8px 0;
-}
-
-#success-alert, #success-alert-with-token {
-  display: none;
-}
-
+#join-form { margin-top: 10px;}
+.tips {font-size: 12px;margin-bottom: 2px;color: gray;}
+.join-info-text {margin-bottom: 2px;}
+input {width: 100%;margin-bottom: 2px;}
+.player {width: 100%;height: 100%;}
+.player-name {margin: 8px 0;}
+#success-alert, #success-alert-with-token {display: none;}
 @media (max-width: 640px) {
   .player {
     width: 100%;
     height: 100%;
   }
 }
-
 /* 新添加的样式 */
-.call-box{
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  right: 0;
-  top: 0;
-  background: #000;
-  color: red;
-  /* display: none; */
-  max-width: 375px;
-  max-height: 667px;
-}
-.my-video{
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  height: 16%;
-  width: 16%;
-  background: #ddd;
-  z-index: 5;
-}
-.btn-box{
-  position: absolute;
-  bottom: 40px;
-  width: 100%;
-  text-align: center;
-  z-index: 5;
-}
-.btn-box>span{
-  display: inline-block;
-  vertical-align: middle;
-  width: 32%;
-}
-.other-box{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-.show-min{
-  position: absolute;
-  z-index: 5;
-}
-.show-max{
-  position: absolute;
-  z-index: 5;
-  display: none;
-  height: 100%;
-  width: 100%;
-}
-.call-box-min{
-  top: 20px;
-  right: 20px;
-  width: 20%;
-  height: 20%;
-}
-.btn-box .audio-auto{
-  display: none;
-}
-html,body{
-	background: #000;
-	color:#fff
-}
+.call-box{position: fixed;height: 100%;width: 100%;background: rgba(0,0,0,0.8);max-width: 500px;max-height: 889px;top: 0;left: 0;}
+.my-video{position: absolute;top: 20px;right: 20px;height: 16%;width: 16%;background: #ddd;z-index: 5;display: none;}
+.btn-box{position: absolute;bottom: 40px;width: 100%;text-align: center;z-index: 5;display: none;}
+.btn-box>button{display: inline-block;vertical-align: middle;border: none;background: none;outline-style: none;}
+.other-box{position: absolute;height: 100%;width: 100%;}
+.show-min{position: absolute;z-index: 5;top: 20px;left: 20px;background: url(./icon/icon.png) no-repeat; background-size: 100% 100%;height: 20px;width: 20px;}
+.show-max{position: absolute;z-index: 5;display: none;height: 100%;width: 100%;}
+.call-box-min{top: 20px;right: 20px;width: 20%;height: 20%;}
+.btn-box .audio-auto{display: none;}
+html,body{color:#fff;height: 100%;width: 100%;}
+.user-box{position: absolute;left: 50%;top: 50%;width: 100%;height: 300px;text-align: center;margin: -150px -50%;font-size: 16px;color: #fff;padding-top: 60px;}
+.user-box>img{width: 120px;height: 120px;margin-bottom: 20px;}
+.call-status{margin-top: 20px;}
+.iconfont{font-size: 26px;}
+.icon-jinyan,.icon-jingyin{font-size: 30px;display: none;}
+.icon-guaduandianhua{color: #ec3225;font-size: 46px;border-radius: 50%;background: #fff;}
+.mc-btn,.audio-none{display: none;}
+.btn-box1 > .mc-btn{display: inline-block;background: url(./icon/icon3.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box1 > .mc-btn-active{display: inline-block;background: url(./icon/icon8.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box2 > .switch-camera{display: inline-block;background: url(./icon/icon10.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box2 > .switch-camera-active{display: inline-block;background: url(./icon/icon11.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box > .leave-btn{display: inline-block;background: url(./icon/icon2.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;margin: 0 30px;}
+.btn-box > .audio-none{display: inline-block;background: url(./icon/icon9.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box > .audio-auto{display: inline-block;background: url(./icon/icon4.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;display: none;}
+.btn-box3 > .open-call{display: inline-block;background: url(./icon/icon6.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;}
+.btn-box3 > .close-call{display: inline-block;background: url(./icon/icon2.png) no-repeat; background-size: 100% 100%;width: 60px;height: 60px;margin-right: 120px;}
+.btn-box3 > .videocall{background: url(./icon/icon7.png) no-repeat; background-size: 100% 100%;}
+.min-float{height: 60px;width: 60px;background: url(./icon/icon5.png) no-repeat; background-size: 100% 100%;position: absolute;z-index: 20;top: 0;left: 0;display: none;}
