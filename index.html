@@ -6,13 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>测试视频通话</title>
   <link rel="stylesheet" href="./vendor/bootstrap.min.css">
-  <link rel="stylesheet" href="./icon/iconfont.css">
-  <link rel="stylesheet" href="./index.css?v=2">
+  <link rel="stylesheet" href="./index.css?v=13">
 </head>
 <body>
   <div >
-
-  
   <div class="container" style="display: none;">
     <form id="join-form">
       <div class="row join-info-group">
@@ -71,49 +68,42 @@
     </div>
     <!-- 操作按钮 -->
     <!-- 语音操作按钮 -->
-    <div class="btn-box">
-      <span id="mc-btn">
-        <i class="icon iconfont icon-maikefeng-tianchong"></i>
-        <i class="icon iconfont icon-jinyan"></i>
-      </span>
-      <span class="leave-btn">
-       <i class="icon iconfont icon-guaduandianhua"></i>
-      </span>
-      <span class="audio-none">
-        <i class="icon iconfont icon-laba"></i>
-        <i class="icon iconfont icon-jingyin"></i>
-      </span>
-      
+    <div class="btn-box btn-box1" >
+      <button class="mc-btn"></button>
+      <button class="mc-btn-active"></button>
+      <button class="leave-btn"></button>
+      <button class="audio-none"></button>
+      <button class="audio-auto"></button>
     </div>
     <!-- 视频操作按钮 -->
-    <div class="btn-box btn-box2" style="display: none;">
-      <span id="#switch">
-        <i class="icon iconfont icon-iconqiehuanjingtou"></i>
-      </span>
-      <span class="leave-btn">
-        <i class="icon iconfont icon-guaduandianhua"></i>
-      </span>
-      <span class="audio-none">
-        <i class="icon iconfont icon-jingyin"></i>
-      </span>
-      <span class="audio-auto">
-        <i class="icon iconfont icon-laba"></i>
-      </span>
+    <div class="btn-box btn-box2" >
+      <button class="switch-camera"></button>
+      <button class="switch-camera-active"></button>
+      <button class="leave-btn"></button>
+      <button class="audio-none"></button>
+      <button class="audio-auto"></button>
     </div>
-    <div class="show-min">
-      <i class="icon iconfont icon-zuixiaohua"></i>
+    <!-- 接听 or 挂断 -->
+    <div class="btn-box btn-box3" >
+      <button class="close-call"></button>
+      <button class="open-call "></button>
     </div>
+    <div class="show-min"></div>
     <div class="show-max"></div>
     <!-- 头像昵称 提示语 -->
     <div class="user-box">
-      <img src="./9.jpg" alt="" class="user-avatar">
-      <div class="nickname">东方红</div>
+      <img src="./avatar/0.jpg" alt="" class="user-avatar">
+      <div class="nickname"></div>
       <div class="call-status">呼叫中...</div>
     </div>
+   
 </div>
+ <!-- 最小化显示图标 -->
+ <div class="min-float"></div>
+ <input type="text" class="test-input" style="display: none;">
   <script src="./vendor/jquery-3.4.1.min.js"></script>
   <script src="./vendor/bootstrap.bundle.min.js"></script>
   <script src="./AgoraRTC_N-4.3.0.js"></script>
-  <script type="module" src="./index.js?v=9"></script>
+  <script type="module" src="./index.js?v=60"></script>
 </body>
 </html>

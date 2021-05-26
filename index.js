@@ -6,7 +6,7 @@ var localTracks = {
   videoTrack: null,
   audioTrack: null
 };
-
+var isOpen = false
 //加入房间的用户
 var remoteUsers = {};
 // Agora client options 登录参数
@@ -17,6 +17,8 @@ var options = {
   token: null//token
 };
 
+
+
 // the demo can auto join channel with params in url 如果地址带有参数 直接登录
 $(() => {
   var urlParams = new URL(location.href).searchParams;
@@ -25,14 +27,26 @@ $(() => {
   options.token = decodeURIComponent(urlParams.get("token"));
   options.uid = urlParams.get("uid")*1;
   callType = urlParams.get("type")*1;
+  if(callType === 2){
+    
+    $(".open-call").addClass("videocall")
+  }
   console.log(options)
   // console.log("用户id",options.uid)
   //如果参数齐全直接加入房间
-  if (options.appid && options.channel && options.uid && options.token) {
+  if(options.appid){
     $("#appid").val(options.appid);
-    $("#token").val(options.token);
+  }
+  if(options.channel){
     $("#channel").val(options.channel);
+  }
+  if(options.uid){
     $("#userid").val(options.uid)
+  }
+  if(options.token){
+    $("#token").val(options.token);
+  }
+  if (options.appid && options.channel && options.uid && options.token) {
     $("#join-form").submit();
   }
 })
@@ -50,11 +64,8 @@ $("#join-form").submit(async function (e) {
   options.token = $("#token").val();
   options.uid = $("#userid").val()*1;
   $("#join").attr("disabled", true);
+  console.log(options)
   try {
-    // options.appid = $("#appid").val();
-    // options.token = $("#token").val();
-    // options.channel = $("#channel").val();
-    // options.uid = 90;
     if(!options.appid){
       alert('请输入appID')
       return
@@ -82,18 +93,32 @@ $("#leave").click(function (e) {
 })
 //挂断按钮点击事件
 $('.leave-btn').click(function(){
-  leave();
+  if(isOpen){
+    leave();
+  }else{
+    if(plus){
+      let videoView = plus.webview.getWebviewById('videoView');
+      videoView.loadURL("http://test.com?type=5")
+    }
+  }
   $(".call-box").hide();
-
 })
 //加入通话事件
 async function join() {
+  if(callType===2){
+    $(".my-video").show();
+  }
   $(".call-box").show()
+  isOpen = true
   // add event listener to play remote tracks when remote user publishs.
   //监听人员加入事件
   client.on("user-published", handleUserPublished);
   //监听人员退出事件
   client.on("user-unpublished", handleUserUnpublished);
+  //token 即将过期的回调
+  client.on("token-privilege-will-expire",upDateToken)
+  //token 已经过期的回调
+  client.on("token-privilege-did-expire",tokenExpired)
   if(callType === 1 ){
     //join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, localTracks.audioTrack ] = await Promise.all([
@@ -129,7 +154,44 @@ async function join() {
 
   // publish local tracks to channel 发布本地音视频轨道
   await client.publish(Object.values(localTracks));
+  callDate()
   console.log("publish success");
+}
+// 计时方法
+function callDate(){
+  let showDate = 0;
+  setInterval(()=>{
+       showDate+=1;
+       let m = parseInt(showDate/60)
+       let s = showDate%60
+       if(m<10){
+         m = "0"+m
+       }
+       if(s<10){
+         s = "0"+s
+       }
+       let showStr = m + ':' + s;
+       console.log(showStr)
+       $(".call-status").text(showStr)
+  },1000)
+}
+//更新token 方法
+window.test =  async function upDateToken2(){
+  let string = document.querySelector(".test-input").value;
+  console.log("获取到新token======"+string)
+ let res = await client.renewToken(string);
+ console.log(res)
+}
+async function tokenExpired(){
+  console.log("token已过期")
+}
+async  function upDateToken(){
+  console.log("token即将过期")
+  
+  if(plus){
+    let videoView = plus.webview.getWebviewById('videoView');
+    videoView.loadURL("http://test.com?type=1")
+  }
 }
 //退出房间方法
 async function leave() {
@@ -155,8 +217,8 @@ async function leave() {
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
   if(plus){
-    var videoView = plus.webview.getWebviewById('videoView');
-    videoView.close()
+    let videoView = plus.webview.getWebviewById('videoView');
+    videoView.loadURL("http://test.com?type=2")
   }
 }
 // 创建dom
@@ -165,6 +227,8 @@ async function subscribe(user, mediaType) {
   // subscribe to a remote user
   await client.subscribe(user, mediaType);
   console.log("subscribe success",mediaType);
+  $(".other-box").text('')
+  $(".other-box").attr('data-uid',uid)
   if (mediaType === 'video') {//视频
     // const player = $(`
     //   <div id="player-wrapper-${uid}">
@@ -173,8 +237,7 @@ async function subscribe(user, mediaType) {
     //   </div>
     // `);
     const player = $(`<div id="player-${uid}" class="player"></div>`)
-    $(".other-box").text('')
-    $(".other-box").attr('data-uid',uid)
+    
     $(".other-box").append(player);
     const ptherUser = $(`<p class="other-${uid}" data-uid="${uid}">otherVideo(${uid})</p>`)
     $("#remote-playerlist").append(ptherUser)
@@ -186,6 +249,7 @@ async function subscribe(user, mediaType) {
     user.audioTrack.play();
   }
 }
+
 //人员加入房间回调
 function handleUserPublished(user, mediaType) {
   console.log(user, mediaType)
@@ -204,28 +268,34 @@ async function switchVideo(id){
    // 切换摄像头。
 localTracks.videoTrack.setDevice(id).then(() => {
   console.log("set device success");
-  alert('切换成功')
+  // alert('切换成功')
 }).catch(e => {
-  alert(`切换失败：${e.code}`)
+  // alert(`切换失败：${e.code}`)
   console.log("set device error", e);
 });
 }
 //点击切换摄像头
-$("#switch").click(function(){
-  console.log(AgoraRTC)
+$(".switch-camera").click(function(){
   //获取设备id
-  AgoraRTC.getDevices().then(devices=>{
-    
-    console.log(devices,localTracks.videoTrack)
-    switchVideo(devices[2].deviceId)
-    
-    
-  }).catch(e => {
-    console.log("get devices error!", e);
-  });
-  
+  AgoraRTC.getCameras().then(res=>{
+    switchVideo(res[1].deviceId)
+    $(".switch-camera").hide();
+    $(".switch-camera-active").show();
+  }).catch(err=>{
+    console.log(err)
+  })
 })
-				
+$(".switch-camera-active").click(function(){
+  //获取设备id
+  AgoraRTC.getCameras().then(res=>{
+    switchVideo(res[0].deviceId)
+    $(".switch-camera-active").hide();
+    $(".switch-camera").show();
+   
+  }).catch(err=>{
+    console.log(err)
+  })
+})			
 document.addEventListener("plusready", function(){
 	//扩展API加载完成事
   console.log('plusapi加载完毕')
@@ -241,21 +311,31 @@ document.addEventListener("plusready", function(){
 }, false);
 //最小化
 $(".show-min").click(function(){
-  $(".show-min").hide();
-  $(".show-max").show();
-  $(".call-box").addClass('call-box-min');
-  $('.btn-box').hide();
-  $(".my-video").hide();
+  $(".call-box").hide()
   if(plus){
     var videoView = plus.webview.getWebviewById('videoView');
     videoView.setStyle({
-      height:"100px",
-      width:"100px",
-      top:"100px",
-      right:"20px"
+      height:"60px",
+      width:"60px",
+      top:"60px",
+      left:"80%",
   });
+  $(".min-float").show()
   }
  
+})
+$(".min-float").click(function(){
+  $(".call-box").show()
+  if(plus){
+    var videoView = plus.webview.getWebviewById('videoView');
+    videoView.setStyle({
+      height:"100%",
+      width:"100%",
+      top:"0",
+      left:"0"
+  });
+  $(".min-float").hide()
+  }
 })
 //最大化
 $(".show-max").click(function(){
@@ -265,19 +345,36 @@ $(".show-max").click(function(){
   $('.btn-box').show();
   $(".my-video").show();
 })
+
 //静音
-$(".audio-none").click(function(){
-  let uid = $(".other-box").attr('data-uid')
-  remoteUsers[uid].audioTrack.setVolume(0);
-  $(".audio-none").hide();
-  $(".audio-auto").show();
-})
-//取消静音
 $(".audio-auto").click(function(){
   let uid = $(".other-box").attr('data-uid')
-  remoteUsers[uid].audioTrack.setVolume(100);
-  $(".audio-none").show();
+  remoteUsers[uid].audioTrack.setVolume(0);
   $(".audio-auto").hide();
+  $(".audio-none").show();
+})
+//取消静音
+$(".audio-none").click(function(){
+  let uid =  $(".other-box").attr('data-uid')
+  remoteUsers[uid].audioTrack.setVolume(100);
+  $(".audio-auto").show();
+  $(".audio-none").hide();
+})
+//静麦
+$(".mc-btn").click(function(){
+  let uid = options.uid
+  console.log(localTracks.audioTrack,localTracks.localAudioTrack)
+  localTracks.audioTrack.setVolume(0);
+  $(".mc-btn").hide();
+  $(".mc-btn-active").show();
+})
+//取消静麦
+$(".mc-btn-active").click(function(){
+  let uid =  options.uid
+  // localAudioTrack
+  localTracks.audioTrack.setVolume(100);
+  $(".mc-btn").show();
+  $(".mc-btn-active").hide();
 })
 //切换视频对象
 $("#remote-playerlist").on('click',function(e){
@@ -290,5 +387,19 @@ $("#remote-playerlist").on('click',function(e){
     remoteUsers[uid].videoTrack.play(`player-${uid}`,{
       Properties:'contain'
     });
+  }
+})
+//接听通话
+$(".open-call").on('click',function(e){
+  if(plus){
+    let videoView = plus.webview.getWebviewById('videoView');
+    videoView.loadURL("http://test.com?type=3")
+  }
+})
+//拒绝通话
+$(".close-call").on('click',function(e){
+  if(plus){
+    let videoView = plus.webview.getWebviewById('videoView');
+    videoView.loadURL("http://test.com?type=4")
   }
 })
